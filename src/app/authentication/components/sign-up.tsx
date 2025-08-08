@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import z, { email } from "zod";
+import z from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -30,12 +30,8 @@ const formSchema = z
   .object({
     name: z.string("Nome inválido.").trim().min(1, "Nome é obrigatório."),
     email: z.email("E-mail inválido."),
-    password: z
-      .string("Senha inválida.")
-      .min(8, "A senha deve ter pelo menos 8 caracteres"),
-    passwordConfirmation: z
-      .string("Senha inválida.")
-      .min(8, "A senha deve ter pelo menos 8 caracteres"),
+    password: z.string("Senha inválida.").min(8, "Senha inválida."),
+    passwordConfirmation: z.string("Senha inválida.").min(8, "Senha inválida."),
   })
   .refine(
     (data) => {
@@ -62,7 +58,7 @@ const SignUpForm = () => {
   });
 
   async function onSubmit(values: FormValues) {
-    const { data, error } = await authClient.signUp.email({
+    await authClient.signUp.email({
       name: values.name,
       email: values.email,
       password: values.password,
